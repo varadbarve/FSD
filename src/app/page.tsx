@@ -29,7 +29,7 @@ export default function Home() {
               </ul>
               <button 
                 onClick={() => {
-                  window.location.href = '/original'
+                  window.location.href = '/original.html'
                 }}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors inline-block text-center mb-2"
               >
@@ -38,7 +38,7 @@ export default function Home() {
               <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
                 Or{' '}
                 <a 
-                  href="/original" 
+                  href="/original.html" 
                   className="text-blue-600 hover:text-blue-700 underline"
                 >
                   click here for direct access
@@ -78,7 +78,7 @@ export default function Home() {
                 <li>1. Click "Open Original HTML App" button</li>
                 <li>2. Or visit: 
                   <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded ml-2 text-sm">
-                    /original
+                    /original.html
                   </code>
                 </li>
                 <li>3. Use demo accounts: admin/password123</li>
@@ -110,10 +110,10 @@ export default function Home() {
                 <p><strong>Direct URLs:</strong></p>
                 <p>Original HTML: 
                   <a 
-                    href="/original" 
+                    href="/original.html" 
                     className="underline hover:text-blue-500 ml-1"
                   >
-                    /original
+                    /original.html
                   </a>
                 </p>
                 <p>React Version: 
