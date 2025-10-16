@@ -1,0 +1,1403 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Doubt Solver - Dark Mode</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- React CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX transformation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        /* CSS (Dark Theme) */
+        :root {
+            --primary-color: #3a86ff;
+            --secondary-color: #8d99ae;
+            --success-color: #2ecc71;
+            --bg-color: #121212;
+            --surface-color: #1e1e2e;
+            --text-color: #edf2f4;
+            --border-color: #4a4a58;
+            --shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        header {
+            background: linear-gradient(90deg, #1e1e2e, #121212);
+            color: var(--text-color);
+            text-align: center;
+            padding: 2rem 1rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+        
+        header p {
+            color: var(--secondary-color);
+        }
+
+        main {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        section {
+            background-color: var(--surface-color);
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+        }
+        
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px var(--primary-color);
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        /* Button Styling */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: #1e6eeb;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #788596;
+        }
+
+
+        /* Animations and Transitions */
+        .doubt-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--primary-color);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .doubt-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(58, 134, 255, 0.2);
+        }
+
+        .doubt-card.resolved {
+            border-left-color: var(--success-color);
+            opacity: 0.7;
+        }
+
+        .doubt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .doubt-subject {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .doubt-card.resolved .doubt-subject {
+            background-color: var(--success-color);
+        }
+
+        .doubt-question {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Answer Styling */
+        .answers-section {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .answer {
+            background-color: var(--bg-color);
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .answer-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .answer-form input {
+            flex-grow: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        /* Main Content - Hidden by default until logged in */
+        #main-content {
+            display: none;
+        }
+
+        #main-content.logged-in {
+            display: block;
+        }
+
+        /* Header Layout */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header-content {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        /* Section Header Styling */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-header h2 {
+            margin: 0;
+        }
+
+        .section-header .btn {
+            font-size: 0.9rem;
+        }
+
+        /* Header Buttons */
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        #logout-btn {
+            display: none;
+        }
+
+        /* Login/Signup Modal */
+        #login-modal, #signup-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(18,18,18,0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        #signup-modal {
+            display: none;
+        }
+
+        #login-form, #signup-form {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            min-width: 300px;
+        }
+
+        #login-form h2, #signup-form h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        #login-form .btn, #signup-form .btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .auth-switch a {
+            color: var(--primary-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .password-requirements {
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            margin-top: 0.5rem;
+            line-height: 1.4;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .header-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            main {
+                padding: 0 0.5rem;
+            }
+            
+            section {
+                padding: 1rem;
+            }
+            
+            .doubt-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .section-header h2 {
+                margin-bottom: 0.5rem;
+            }
+            
+            .answer-form {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .answer-form .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 1rem 0.5rem;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+        /* Loading Spinner */
+        .loading-spinner {
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notification System */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            animation: slideInRight 0.3s ease-out;
+            max-width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .notification.success {
+            background-color: var(--success-color);
+        }
+
+        .notification.error {
+            background-color: #e74c3c;
+        }
+
+        .notification.info {
+            background-color: var(--primary-color);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Empty State Styling */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Statistics Section Styling */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: var(--bg-color);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number.primary {
+            color: var(--primary-color);
+        }
+
+        .stat-number.success {
+            color: var(--success-color);
+        }
+
+        .stat-number.secondary {
+            color: var(--secondary-color);
+        }
+
+        /* Container Management */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Application Content (Hidden until logged in) -->
+    <div id="main-content">
+        <header>
+            <div class="header-container">
+                <div class="header-content">
+                    <h1>🎓 Doubt Solver Hub</h1>
+                    <p>Your collaborative space to ask, answer, and learn.</p>
+                </div>
+                <div class="header-buttons">
+                    <button id="react-toggle-btn" class="btn btn-secondary" onclick="toggleReactMode()">🔄 Switch to React</button>
+                    <button id="theme-toggle-btn" class="btn btn-secondary">🌙 Light Mode</button>
+                    <button id="clear-data-btn" class="btn btn-secondary">Clear All Data</button>
+                    <button id="logout-btn" class="btn btn-secondary">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section id="new-doubt-section">
+                <h2>Post a New Doubt</h2>
+                <form id="new-doubt-form">
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" placeholder="e.g., JavaScript, Calculus, Physics" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="question">Your Question</label>
+                        <textarea id="question" rows="4" placeholder="Describe your doubt in detail..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Doubt</button>
+                </form>
+            </section>
+
+            <section id="search-section">
+                <h2>🔍 Search Doubts</h2>
+                <div class="form-group">
+                    <input type="text" id="search-input" placeholder="Search by subject or question...">
+                </div>
+                <div class="form-group">
+                    <select id="filter-select">
+                        <option value="all">All Doubts</option>
+                        <option value="resolved">Resolved Only</option>
+                        <option value="unresolved">Unresolved Only</option>
+                    </select>
+                </div>
+            </section>
+
+            <section id="stats-section">
+                <h2>📊 Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number primary" id="total-doubts">0</div>
+                        <div>Total Doubts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number success" id="resolved-count">0</div>
+                        <div>Resolved</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number secondary" id="unresolved-count">0</div>
+                        <div>Unresolved</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vanilla JS Version (default) -->
+            <div id="vanilla-doubt-container">
+                <section id="search-section">
+                    <h2>🔍 Search Doubts</h2>
+                    <div class="form-group">
+                        <input type="text" id="search-input" placeholder="Search by subject or question...">
+                    </div>
+                    <div class="form-group">
+                        <select id="filter-select">
+                            <option value="all">All Doubts</option>
+                            <option value="resolved">Resolved Only</option>
+                            <option value="unresolved">Unresolved Only</option>
+                        </select>
+                    </div>
+                </section>
+
+                <section class="doubts-container">
+                    <div class="section-header">
+                        <h2>🤔 Unresolved Doubts</h2>
+                        <button id="clear-unresolved-btn" class="btn btn-secondary">Clear Unresolved</button>
+                    </div>
+                    <div id="unresolved-doubts-list">
+                        <div class="loading-spinner" id="unresolved-loading"></div>
+                    </div>
+                </section>
+
+                <section class="doubts-container">
+                    <div class="section-header">
+                        <h2>✅ Resolved Doubts</h2>
+                        <button id="clear-resolved-btn" class="btn btn-secondary">Clear Resolved</button>
+                    </div>
+                    <div id="resolved-doubts-list">
+                        <div class="loading-spinner" id="resolved-loading"></div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- React Version (hidden by default) -->
+            <div id="react-doubt-container" class="hidden">
+                <!-- React components will be rendered here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal">
+        <form id="login-form">
+            <h2>Login</h2>
+            <div class="form-group">
+                <label for="login-username">Username</label>
+                <input type="text" id="login-username" required placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" required placeholder="Enter your password">
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+            <div class="auth-switch">
+                Don't have an account? <a id="show-signup">Sign up here</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signup-modal">
+        <form id="signup-form">
+            <h2>Sign Up</h2>
+            <div class="form-group">
+                <label for="signup-username">Username</label>
+                <input type="text" id="signup-username" required placeholder="Choose a username">
+            </div>
+            <div class="form-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" required placeholder="Create a password">
+                <div class="password-requirements">
+                    Password must be at least 6 characters long
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="signup-confirm-password">Confirm Password</label>
+                <input type="password" id="signup-confirm-password" required placeholder="Confirm your password">
+            </div>
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+            <div class="auth-switch">
+                Already have an account? <a id="show-login">Login here</a>
+            </div>
+        </form>
+    </div>
+    <script>
+        'use strict';
+        // Simple login logic with signup functionality
+        let currentUser = null;
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginModal = document.getElementById('login-modal');
+            const signupModal = document.getElementById('signup-modal');
+            const mainContent = document.getElementById('main-content');
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const usernameInput = document.getElementById('login-username');
+            const passwordInput = document.getElementById('login-password');
+            const logoutBtn = document.getElementById('logout-btn');
+            const clearDataBtn = document.getElementById('clear-data-btn');
+            const clearResolvedBtn = document.getElementById('clear-resolved-btn');
+            const clearUnresolvedBtn = document.getElementById('clear-unresolved-btn');
+            const searchInput = document.getElementById('search-input');
+            const filterSelect = document.getElementById('filter-select');
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            
+            // Signup form elements
+            const signupUsernameInput = document.getElementById('signup-username');
+            const signupPasswordInput = document.getElementById('signup-password');
+            const signupConfirmPasswordInput = document.getElementById('signup-confirm-password');
+            const showSignupLink = document.getElementById('show-signup');
+            const showLoginLink = document.getElementById('show-login');
+
+            // Load user accounts from localStorage or use default ones
+            let userAccounts = JSON.parse(localStorage.getItem('userAccounts')) || {
+                'admin': 'password123',
+                'user': 'mypass',
+                'student': 'study123'
+            };
+
+            const saveUserAccounts = () => {
+                localStorage.setItem('userAccounts', JSON.stringify(userAccounts));
+            };
+
+            const showMainContent = () => {
+                loginModal.style.display = 'none';
+                signupModal.style.display = 'none';
+                mainContent.style.display = 'block';
+                logoutBtn.style.display = 'block';
+            };
+
+            const showLoginPage = () => {
+                loginModal.style.display = 'flex';
+                signupModal.style.display = 'none';
+                mainContent.style.display = 'none';
+                logoutBtn.style.display = 'none';
+            };
+
+            // Check if already logged in
+            currentUser = localStorage.getItem('doubtUser');
+            if (currentUser) {
+                showMainContent();
+            } else {
+                showLoginPage();
+            }
+
+            // Switch between login and signup forms
+            showSignupLink.addEventListener('click', function() {
+                loginModal.style.display = 'none';
+                signupModal.style.display = 'flex';
+            });
+
+            showLoginLink.addEventListener('click', function() {
+                signupModal.style.display = 'none';
+                loginModal.style.display = 'flex';
+            });
+
+            // Signup form submission
+            signupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = signupUsernameInput.value.trim();
+                const password = signupPasswordInput.value.trim();
+                const confirmPassword = signupConfirmPasswordInput.value.trim();
+
+                // Validation
+                if (!username || !password || !confirmPassword) {
+                    alert('Please fill in all fields.');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    alert('Password must be at least 6 characters long.');
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match.');
+                    return;
+                }
+
+                if (userAccounts[username]) {
+                    alert('Username already exists. Please choose a different username.');
+                    return;
+                }
+
+                // Create new account
+                userAccounts[username] = password;
+                saveUserAccounts();
+                
+                alert(`Account created successfully! Welcome, ${username}!`);
+                
+                // Auto-login after signup
+                currentUser = username;
+                localStorage.setItem('doubtUser', username);
+                showMainContent();
+                signupForm.reset();
+            });
+
+            // Login form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+                
+                if (username && password) {
+                    // Check credentials against stored accounts
+                    if (userAccounts[username] && userAccounts[username] === password) {
+                        currentUser = username;
+                        localStorage.setItem('doubtUser', username);
+                        showMainContent();
+                        alert(`Welcome back, ${username}!`);
+                        loginForm.reset();
+                    } else {
+                        alert('Invalid username or password. Please try again or create a new account.');
+                    }
+                } else {
+                    alert('Please enter both username and password.');
+                }
+            });
+
+            // Logout functionality
+            logoutBtn.addEventListener('click', function() {
+                currentUser = null;
+                localStorage.removeItem('doubtUser');
+                showLoginPage();
+                loginForm.reset();
+                signupForm.reset();
+                alert('You have been logged out.');
+            });
+
+            // Clear all data functionality
+            clearDataBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear all data? This will remove all doubts, user accounts, and logout. This action cannot be undone.')) {
+                    // Clear all localStorage data
+                    localStorage.removeItem('doubts');
+                    localStorage.removeItem('userAccounts');
+                    localStorage.removeItem('doubtUser');
+                    
+                    // Reset current user
+                    currentUser = null;
+                    
+                    // Reset doubts to original sample data
+                    doubts = [
+                        {
+                            id: 1,
+                            subject: 'Sample: CSS',
+                            question: 'How do I center a div both vertically and horizontally?',
+                            answers: ['You can use Flexbox! Set the parent container to display: flex;, justify-content: center;, and align-items: center;.'],
+                            isResolved: false
+                        },
+                        {
+                            id: 2,
+                            subject: 'Sample: Math',
+                            question: 'What is the Pythagorean theorem?',
+                            answers: ['In a right-angled triangle, the square of the hypotenuse (the side opposite the right angle) is equal to the sum of the squares of the other two sides: a² + b² = c².'],
+                            isResolved: true
+                        }
+                    ];
+                    
+                    // Reset user accounts to defaults
+                    userAccounts = {
+                        'admin': 'password123',
+                        'user': 'mypass',
+                        'student': 'study123'
+                    };
+                    
+                    // Show login page
+                    showLoginPage();
+                    loginForm.reset();
+                    signupForm.reset();
+                    
+                    alert('All data has been cleared and the page has been restored to its original state.');
+                }
+            });
+
+            // Clear resolved doubts functionality
+            clearResolvedBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear all resolved doubts? This action cannot be undone.')) {
+                    // Filter out resolved doubts, keeping only unresolved ones
+                    doubts = doubts.filter(doubt => !doubt.isResolved);
+                    
+                    // Save updated doubts to localStorage
+                    saveDoubts();
+                    
+                    // Re-render the doubts
+                    renderDoubts();
+                    
+                    showNotification('All resolved doubts have been cleared.', 'success');
+                }
+            });
+
+            // Clear unresolved doubts functionality
+            clearUnresolvedBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear all unresolved doubts? This action cannot be undone.')) {
+                    // Filter out unresolved doubts, keeping only resolved ones
+                    doubts = doubts.filter(doubt => doubt.isResolved);
+                    filteredDoubts = [...doubts];
+                    
+                    // Save updated doubts to localStorage
+                    saveDoubts();
+                    
+                    // Re-render the doubts
+                    renderDoubts();
+                    
+                    showNotification('All unresolved doubts have been cleared.', 'success');
+                }
+            });
+
+            // Doubt solver logic
+            const doubtForm = document.getElementById('new-doubt-form');
+            const subjectInput = document.getElementById('subject');
+            const questionInput = document.getElementById('question');
+            const unresolvedList = document.getElementById('unresolved-doubts-list');
+            const resolvedList = document.getElementById('resolved-doubts-list');
+
+            // Load doubts from localStorage or use default sample data
+            let doubts = JSON.parse(localStorage.getItem('doubts')) || [
+                {
+                    id: 1,
+                    subject: 'Sample: CSS',
+                    question: 'How do I center a div both vertically and horizontally?',
+                    answers: ['You can use Flexbox! Set the parent container to display: flex;, justify-content: center;, and align-items: center;.'],
+                    isResolved: false
+                },
+                {
+                    id: 2,
+                    subject: 'Sample: Math',
+                    question: 'What is the Pythagorean theorem?',
+                    answers: ['In a right-angled triangle, the square of the hypotenuse (the side opposite the right angle) is equal to the sum of the squares of the other two sides: a² + b² = c².'],
+                    isResolved: true
+                }
+            ];
+
+            // Initialize filtered doubts after doubts is declared
+            let filteredDoubts = [...doubts];
+            
+            const saveDoubts = () => {
+                localStorage.setItem('doubts', JSON.stringify(doubts));
+            };
+
+            // Notification system
+            const showNotification = (message, type = 'info') => {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideInRight 0.3s ease-out reverse';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            };
+
+            // Enhanced render function with search and filter
+            const filterDoubts = () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filterType = filterSelect.value;
+                
+                filteredDoubts = doubts.filter(doubt => {
+                    const matchesSearch = doubt.subject.toLowerCase().includes(searchTerm) || 
+                                        doubt.question.toLowerCase().includes(searchTerm);
+                    
+                    if (filterType === 'resolved') return matchesSearch && doubt.isResolved;
+                    if (filterType === 'unresolved') return matchesSearch && !doubt.isResolved;
+                    return matchesSearch;
+                });
+                
+                renderDoubts();
+            };
+
+            const renderDoubts = () => {
+                // Show loading spinners
+                document.getElementById('unresolved-loading').style.display = 'block';
+                document.getElementById('resolved-loading').style.display = 'block';
+                
+                setTimeout(() => {
+                    unresolvedList.innerHTML = '';
+                    resolvedList.innerHTML = '';
+                    
+                    const unresolvedDoubts = filteredDoubts.filter(doubt => !doubt.isResolved);
+                    const resolvedDoubts = filteredDoubts.filter(doubt => doubt.isResolved);
+                    
+                    // Hide loading spinners
+                    document.getElementById('unresolved-loading').style.display = 'none';
+                    document.getElementById('resolved-loading').style.display = 'none';
+                    
+                    // Render unresolved doubts
+                    if (unresolvedDoubts.length === 0) {
+                        unresolvedList.innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-state-icon">🤔</div>
+                                <p>No unresolved doubts found.</p>
+                            </div>
+                        `;
+                    } else {
+                        unresolvedDoubts.forEach(doubt => renderDoubtCard(doubt, unresolvedList));
+                    }
+                    
+                    // Render resolved doubts
+                    if (resolvedDoubts.length === 0) {
+                        resolvedList.innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-state-icon">✅</div>
+                                <p>No resolved doubts found.</p>
+                            </div>
+                        `;
+                    } else {
+                        resolvedDoubts.forEach(doubt => renderDoubtCard(doubt, resolvedList));
+                    }
+                    
+                    // Update statistics
+                    updateStats();
+                }, 300);
+            };
+
+            const renderDoubtCard = (doubt, container) => {
+                const doubtCard = document.createElement('div');
+                doubtCard.className = `doubt-card${doubt.isResolved ? ' resolved' : ''}`;
+                doubtCard.dataset.id = doubt.id;
+
+                const answersHTML = doubt.answers.map(answer => `<div class="answer">${answer}</div>`).join('');
+
+                doubtCard.innerHTML = `
+                    <div class="doubt-header">
+                        <span class="doubt-subject">${doubt.subject}</span>
+                        ${!doubt.isResolved ? `<button class="btn btn-success resolve-btn" data-id="${doubt.id}">Mark as Resolved</button>` : ''}
+                    </div>
+                    <p class="doubt-question">${doubt.question}</p>
+                    <div class="answers-section">
+                        <strong>Answers (${doubt.answers.length}):</strong>
+                        ${answersHTML || '<p style="color: var(--secondary-color); font-style: italic;">No answers yet. Be the first to help!</p>'}
+                        ${!doubt.isResolved ? `
+                            <form class="answer-form">
+                                <input type="text" placeholder="Type your answer..." class="answer-input" required>
+                                <button type="submit" class="btn btn-secondary add-answer-btn" data-id="${doubt.id}">Answer</button>
+                            </form>
+                        ` : ''}
+                    </div>
+                `;
+
+                container.appendChild(doubtCard);
+            };
+
+            // Update statistics
+            const updateStats = () => {
+                const totalDoubts = doubts.length;
+                const resolvedDoubts = doubts.filter(d => d.isResolved).length;
+                const unresolvedDoubts = totalDoubts - resolvedDoubts;
+                
+                document.getElementById('total-doubts').textContent = totalDoubts;
+                document.getElementById('resolved-count').textContent = resolvedDoubts;
+                document.getElementById('unresolved-count').textContent = unresolvedDoubts;
+            };
+
+            // Theme toggle functionality
+            let isDarkMode = true;
+            themeToggleBtn.addEventListener('click', function() {
+                isDarkMode = !isDarkMode;
+                
+                if (isDarkMode) {
+                    // Switch to dark mode
+                    document.documentElement.style.setProperty('--primary-color', '#3a86ff');
+                    document.documentElement.style.setProperty('--bg-color', '#121212');
+                    document.documentElement.style.setProperty('--surface-color', '#1e1e2e');
+                    document.documentElement.style.setProperty('--text-color', '#edf2f4');
+                    themeToggleBtn.textContent = '🌙 Light Mode';
+                } else {
+                    // Switch to light mode
+                    document.documentElement.style.setProperty('--primary-color', '#3a86ff');
+                    document.documentElement.style.setProperty('--bg-color', '#ffffff');
+                    document.documentElement.style.setProperty('--surface-color', '#f8f9fa');
+                    document.documentElement.style.setProperty('--text-color', '#212529');
+                    themeToggleBtn.textContent = '🌙 Dark Mode';
+                }
+                
+                localStorage.setItem('isDarkMode', isDarkMode);
+            });
+
+            // Load theme preference
+            const savedTheme = localStorage.getItem('isDarkMode');
+            if (savedTheme !== null) {
+                isDarkMode = savedTheme === 'true';
+                if (!isDarkMode) {
+                    themeToggleBtn.click();
+                }
+            }
+
+            const addDoubt = (subject, question) => {
+                const newDoubt = {
+                    id: Date.now(),
+                    subject,
+                    question,
+                    answers: [],
+                    isResolved: false
+                };
+                doubts.unshift(newDoubt);
+                filteredDoubts = [...doubts];
+                saveDoubts();
+                renderDoubts();
+                showNotification('Doubt posted successfully!', 'success');
+            };
+            
+            const addAnswer = (doubtId, answerText) => {
+                const doubt = doubts.find(d => d.id === doubtId);
+                if (doubt) {
+                    doubt.answers.push(answerText);
+                    filteredDoubts = [...doubts];
+                    saveDoubts();
+                    renderDoubts();
+                    showNotification('Answer added successfully!', 'success');
+                }
+            };
+
+            const resolveDoubt = (doubtId) => {
+                const doubt = doubts.find(d => d.id === doubtId);
+                if (doubt) {
+                    doubt.isResolved = true;
+                    filteredDoubts = [...doubts];
+                    saveDoubts();
+                    renderDoubts();
+                    showNotification('Doubt marked as resolved!', 'success');
+                }
+            };
+
+            doubtForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const subject = subjectInput.value.trim();
+                const question = questionInput.value.trim();
+
+                if (subject && question) {
+                    addDoubt(subject, question);
+                    doubtForm.reset();
+                } else {
+                    alert('Please fill in both the subject and question fields.');
+                }
+            });
+
+            // Search and filter functionality
+            searchInput.addEventListener('input', filterDoubts);
+            filterSelect.addEventListener('change', filterDoubts);
+
+            document.body.addEventListener('click', (e) => {
+                if (e.target.classList.contains('resolve-btn')) {
+                    const doubtId = parseInt(e.target.dataset.id);
+                    resolveDoubt(doubtId);
+                }
+            });
+
+            document.body.addEventListener('submit', (e) => {
+                if (e.target.classList.contains('answer-form')) {
+                    e.preventDefault();
+                    const answerInput = e.target.querySelector('.answer-input');
+                    const answerText = answerInput.value.trim();
+                    const doubtId = parseInt(e.target.querySelector('.add-answer-btn').dataset.id);
+
+                    if (answerText) {
+                        addAnswer(doubtId, answerText);
+                        answerInput.value = '';
+                    }
+                }
+            });
+
+            renderDoubts();
+        });
+    </script>
+
+    <!-- React Component Example -->
+    <script type="text/babel">
+        // React Component for Enhanced Doubt Card
+        const DoubtCard = ({ doubt, onResolve, onAddAnswer }) => {
+            const [newAnswer, setNewAnswer] = React.useState('');
+            const [isExpanded, setIsExpanded] = React.useState(false);
+
+            const handleSubmitAnswer = (e) => {
+                e.preventDefault();
+                if (newAnswer.trim()) {
+                    onAddAnswer(doubt.id, newAnswer.trim());
+                    setNewAnswer('');
+                }
+            };
+
+            return (
+                <div className={`doubt-card ${doubt.isResolved ? 'resolved' : ''}`}>
+                    <div className="doubt-header">
+                        <span className="doubt-subject">{doubt.subject}</span>
+                        {!doubt.isResolved && (
+                            <button 
+                                className="btn btn-success" 
+                                onClick={() => onResolve(doubt.id)}
+                            >
+                                Mark as Resolved
+                            </button>
+                        )}
+                    </div>
+                    <p className="doubt-question">{doubt.question}</p>
+                    
+                    <div className="answers-section">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <strong>Answers ({doubt.answers.length}):</strong>
+                            {doubt.answers.length > 2 && (
+                                <button 
+                                    className="btn btn-secondary"
+                                    style={{ fontSize: '0.8rem', padding: '0.3rem 0.6rem' }}
+                                    onClick={() => setIsExpanded(!isExpanded)}
+                                >
+                                    {isExpanded ? 'Show Less' : 'Show All'}
+                                </button>
+                            )}
+                        </div>
+                        
+                        {doubt.answers.length === 0 ? (
+                            <p style={{ color: 'var(--secondary-color)', fontStyle: 'italic' }}>
+                                No answers yet. Be the first to help!
+                            </p>
+                        ) : (
+                            <div>
+                                {(isExpanded ? doubt.answers : doubt.answers.slice(0, 2)).map((answer, index) => (
+                                    <div key={index} className="answer">{answer}</div>
+                                ))}
+                            </div>
+                        )}
+                        
+                        {!doubt.isResolved && (
+                            <form className="answer-form" onSubmit={handleSubmitAnswer}>
+                                <input
+                                    type="text"
+                                    placeholder="Type your answer..."
+                                    value={newAnswer}
+                                    onChange={(e) => setNewAnswer(e.target.value)}
+                                    className="answer-input"
+                                    required
+                                />
+                                <button type="submit" className="btn btn-secondary">
+                                    Answer
+                                </button>
+                            </form>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        // React Component for Doubt List
+        const DoubtList = ({ doubts, title, onResolve, onAddAnswer, emptyIcon, emptyMessage }) => {
+            return (
+                <section className="doubts-container">
+                    <div className="section-header">
+                        <h2>{title}</h2>
+                    </div>
+                    <div>
+                        {doubts.length === 0 ? (
+                            <div className="empty-state">
+                                <div className="empty-state-icon">{emptyIcon}</div>
+                                <p>{emptyMessage}</p>
+                            </div>
+                        ) : (
+                            doubts.map(doubt => (
+                                <DoubtCard 
+                                    key={doubt.id} 
+                                    doubt={doubt} 
+                                    onResolve={onResolve}
+                                    onAddAnswer={onAddAnswer}
+                                />
+                            ))
+                        )}
+                    </div>
+                </section>
+            );
+        };
+
+        // Main React App Component
+        const DoubtSolverApp = () => {
+            const [doubts, setDoubts] = React.useState(() => {
+                return JSON.parse(localStorage.getItem('doubts')) || [
+                    {
+                        id: 1,
+                        subject: 'Sample: CSS',
+                        question: 'How do I center a div both vertically and horizontally?',
+                        answers: ['You can use Flexbox! Set the parent container to display: flex;, justify-content: center;, and align-items: center;.'],
+                        isResolved: false
+                    },
+                    {
+                        id: 2,
+                        subject: 'Sample: Math',
+                        question: 'What is the Pythagorean theorem?',
+                        answers: ['In a right-angled triangle, the square of the hypotenuse (the side opposite the right angle) is equal to the sum of the squares of the other two sides: a² + b² = c².'],
+                        isResolved: true
+                    }
+                ];
+            });
+
+            const [searchTerm, setSearchTerm] = React.useState('');
+            const [filterType, setFilterType] = React.useState('all');
+
+            // Filter doubts based on search and filter
+            const filteredDoubts = doubts.filter(doubt => {
+                const matchesSearch = doubt.subject.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                    doubt.question.toLowerCase().includes(searchTerm.toLowerCase());
+                
+                if (filterType === 'resolved') return matchesSearch && doubt.isResolved;
+                if (filterType === 'unresolved') return matchesSearch && !doubt.isResolved;
+                return matchesSearch;
+            });
+
+            const unresolvedDoubts = filteredDoubts.filter(doubt => !doubt.isResolved);
+            const resolvedDoubts = filteredDoubts.filter(doubt => doubt.isResolved);
+
+            // Save to localStorage whenever doubts change
+            React.useEffect(() => {
+                localStorage.setItem('doubts', JSON.stringify(doubts));
+            }, [doubts]);
+
+            const handleResolve = (doubtId) => {
+                setDoubts(prev => prev.map(doubt => 
+                    doubt.id === doubtId ? { ...doubt, isResolved: true } : doubt
+                ));
+            };
+
+            const handleAddAnswer = (doubtId, answer) => {
+                setDoubts(prev => prev.map(doubt => 
+                    doubt.id === doubtId 
+                        ? { ...doubt, answers: [...doubt.answers, answer] }
+                        : doubt
+                ));
+            };
+
+            return (
+                <div>
+                    <section id="search-section">
+                        <h2>🔍 Search Doubts (React)</h2>
+                        <div className="form-group">
+                            <input
+                                type="text"
+                                placeholder="Search by subject or question..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
+                                <option value="all">All Doubts</option>
+                                <option value="resolved">Resolved Only</option>
+                                <option value="unresolved">Unresolved Only</option>
+                            </select>
+                        </div>
+                    </section>
+                    
+                    <DoubtList 
+                        doubts={unresolvedDoubts}
+                        title="🤔 Unresolved Doubts (React)"
+                        onResolve={handleResolve}
+                        onAddAnswer={handleAddAnswer}
+                        emptyIcon="🤔"
+                        emptyMessage="No unresolved doubts found."
+                    />
+                    
+                    <DoubtList 
+                        doubts={resolvedDoubts}
+                        title="✅ Resolved Doubts (React)"
+                        onResolve={handleResolve}
+                        onAddAnswer={handleAddAnswer}
+                        emptyIcon="✅"
+                        emptyMessage="No resolved doubts found."
+                    />
+                </div>
+            );
+        };
+
+        // Function to toggle between vanilla JS and React
+        window.toggleReactMode = () => {
+            const reactContainer = document.getElementById('react-doubt-container');
+            const vanillaContainer = document.getElementById('vanilla-doubt-container');
+            const toggleBtn = document.getElementById('react-toggle-btn');
+            
+            if (reactContainer.classList.contains('hidden')) {
+                // Show React, hide vanilla
+                reactContainer.classList.remove('hidden');
+                vanillaContainer.classList.add('hidden');
+                toggleBtn.textContent = '🔄 Switch to Vanilla JS';
+                
+                // Render React app
+                ReactDOM.render(<DoubtSolverApp />, reactContainer);
+            } else {
+                // Show vanilla, hide React
+                reactContainer.classList.add('hidden');
+                vanillaContainer.classList.remove('hidden');
+                toggleBtn.textContent = '🔄 Switch to React';
+            }
+        };
+
+    </script>
+
+</body>
+</html>
