@@ -29,7 +29,7 @@ export default function Home() {
               </ul>
               <button 
                 onClick={() => {
-                  window.open('/original.html', '_blank', 'noopener,noreferrer')
+                  window.location.href = '/original'
                 }}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors inline-block text-center mb-2"
               >
@@ -38,10 +38,8 @@ export default function Home() {
               <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
                 Or{' '}
                 <a 
-                  href="/original.html" 
+                  href="/original" 
                   className="text-blue-600 hover:text-blue-700 underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   click here for direct access
                 </a>
@@ -78,9 +76,9 @@ export default function Home() {
               <h3 className="text-lg font-medium mb-3 text-gray-800 dark:text-white">For Original HTML Version:</h3>
               <ol className="text-gray-600 dark:text-gray-400 space-y-2">
                 <li>1. Click "Open Original HTML App" button</li>
-                <li>2. Or visit directly: 
+                <li>2. Or visit: 
                   <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded ml-2 text-sm">
-                    localhost:3000/original.html
+                    /original
                   </code>
                 </li>
                 <li>3. Use demo accounts: admin/password123</li>
@@ -112,12 +110,10 @@ export default function Home() {
                 <p><strong>Direct URLs:</strong></p>
                 <p>Original HTML: 
                   <a 
-                    href="/original.html" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
+                    href="/original" 
                     className="underline hover:text-blue-500 ml-1"
                   >
-                    localhost:3000/original.html
+                    /original
                   </a>
                 </p>
                 <p>React Version: 
@@ -125,7 +121,7 @@ export default function Home() {
                     href="/react-app" 
                     className="underline hover:text-blue-500 ml-1"
                   >
-                    localhost:3000/react-app
+                    /react-app
                   </a>
                 </p>
               </div>
